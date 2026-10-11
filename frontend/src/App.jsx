@@ -1,5 +1,7 @@
+
 import { useState } from "react";
 import { useScroll } from "framer-motion";
+
 import Preloader from "./components/Preloader";
 import CustomCursor from "./components/CustomCursor";
 import Navbar from "./components/Navbar";
@@ -16,23 +18,6 @@ import Footer from "./components/Footer";
 import GlobalAtmosphere from "./components/GlobalAtmosphere";
 import { ScrollProgressProvider } from "./context/ScrollProgressContext";
 
-// Desktop keeps the asymmetric two-column editorial composition from the
-// reference (left: Hero → Services → Process → Cinematic; right: Visual
-// Panel → Selected Work → Why Qovyel → Testimonials → Contact → Footer),
-// but scrolling is unified — the whole page scrolls together as one
-// continuous experience rather than each column scrolling independently.
-// If one column ends up shorter than the other, its last section simply
-// sits above whitespace while the taller column keeps going underneath —
-// simpler and more predictable than trying to pin/stick the shorter
-// column's end, which is fragile with this much variance in content
-// length.
-//
-// On mobile this collapses into a single, sensibly-ordered column (each
-// section carries a mobile `order` and reverts to normal flow at desktop).
-function Slot({ orderClass, children }) {
-  return <div className={`${orderClass} lg:contents`}>{children}</div>;
-}
-
 export default function App() {
   const [loading, setLoading] = useState(true);
   const { scrollYProgress } = useScroll();
@@ -47,42 +32,38 @@ export default function App() {
 
       <Navbar />
 
-      <main className="flex flex-col lg:grid lg:grid-cols-2 lg:items-start lg:pt-20 [perspective:1400px]">
-        <div className="contents lg:flex lg:flex-col lg:border-r lg:border-white/10">
-          <Slot orderClass="order-1">
-            <Hero />
-          </Slot>
-          <Slot orderClass="order-4">
-            <Services />
-          </Slot>
-          <Slot orderClass="order-5">
-            <Process />
-          </Slot>
-          <Slot orderClass="order-8">
-            <CinematicSection />
-          </Slot>
-        </div>
+      <main className="flex w-full flex-col [perspective:1400px]">
+        <section id="home" className="w-full">
+          <Hero />
+          <VisualPanel />
+        </section>
 
-        <div className="contents lg:flex lg:flex-col lg:min-h-screen">
-          <Slot orderClass="order-2">
-            <VisualPanel />
-          </Slot>
-          <Slot orderClass="order-3">
-            <Projects />
-          </Slot>
-          <Slot orderClass="order-6">
-            <WhyQovyel />
-          </Slot>
-          <Slot orderClass="order-7">
-            <Testimonials />
-          </Slot>
-          <Slot orderClass="order-9">
-            <Contact />
-          </Slot>
-          <Slot orderClass="order-10">
-            <Footer />
-          </Slot>
-        </div>
+        <section id="services" className="w-full">
+          <Services />
+        </section>
+
+        <section id="work" className="w-full">
+          <Projects />
+        </section>
+
+        <section id="process" className="w-full">
+          <Process />
+        </section>
+
+        <section id="about" className="w-full">
+          <WhyQovyel />
+          <Testimonials />
+        </section>
+
+        <section id="cinematic" className="w-full">
+          <CinematicSection />
+        </section>
+
+        <section id="contact" className="w-full">
+          <Contact />
+        </section>
+
+        <Footer />
       </main>
     </ScrollProgressProvider>
   );
